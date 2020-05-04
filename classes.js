@@ -74,21 +74,22 @@ A constructor function is initialized with a number of parameters, which would b
 referring to the function itself. The first letter of the identifier would be capitalized by convention.*/
 
 // Initializing a constructor function
+
 var HeroFunction = function HeroFunction(name, level) {
     this.name = name;
     this.level = level;
 }
 
-/*
-When we translate this to the class syntax, shown below, we see that it is structured very similarly.*/
-
-// Initializing a class definition
+// /*
+// When we translate this to the class syntax, shown below, we see that it is structured very similarly.*/
 var HeroClass = class HeroClass {
     constructor(name, level) {
         this.name = name;
         this.level = level;
     }
 }
+
+// Initializing a class definition
 
 /*
 We know a constructor function is meant to be an object blueprint by the capitalization of the first letter of the 
@@ -129,7 +130,6 @@ HeroClass = class Hero {
         return `${this.name} says hello.`;
     }
 }
-
 
 /*
 Let’s take a look at these properties and methods in action. We will create a new instance of Hero using the 
