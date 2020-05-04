@@ -1,5 +1,4 @@
 /*
-
 JavaScript is a prototype-based language, meaning object properties and methods can be shared through 
 generalized objects that have the ability to be cloned and extended. This is known as prototypical 
 inheritance and differs from class inheritance. Among popular object-oriented programming languages, 
