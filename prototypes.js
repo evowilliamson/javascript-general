@@ -38,8 +38,8 @@ exposes the internal [[Prototype]] of an object. It is important to note that ._
 feature and should not be used in production code, and it is not present in every modern browser. 
 However, we can use it throughout this article for demonstrative purposes.*/
 
-__proto = x.__proto__;
-console.log(__proto);
+__protoX = x.__proto__;
+console.log(__protoX);
 
 /*
 The output will be the same as if you had used getPrototypeOf().
@@ -87,84 +87,130 @@ properties and methods on the Array.prototype. We can test this by creating a ne
 let y = [];
 
 /*
-Keep in mind that we could also write it as an array constructor, let y = new Array(). If we take a look at the [[Prototype]] of the new y array, we will see that it has more properties and methods than the x object. It has inherited everything from Array.prototype.
+Keep in mind that we could also write it as an array constructor, let y = new Array(). If we take a look 
+at the [[Prototype]] of the new y array, we will see that it has more properties and methods than the 
+x object. It has inherited everything from Array.prototype.*/
 
-y.__proto__;
+__protoY = y.__proto__;
+console.log(__protoY);
+
+/*
+Output
 [constructor: ƒ, concat: ƒ, pop: ƒ, push: ƒ, …]
-You will notice a constructor property on the prototype that is set to Array(). The constructor property returns the constructor function of an object, which is a mechanism used to construct objects from functions.
+You will notice a constructor property on the prototype that is set to Array(). The constructor property 
+returns the constructor function of an object, which is a mechanism used to construct objects from functions.
 
-We can chain two prototypes together now, since our prototype chain is longer in this case. It looks like y -> Array -> Object.
+We can chain two prototypes together now, since our prototype chain is longer in this case. It looks 
+like y -> Array -> Object.*/
 
-y.__proto__.__proto__;
+console.log(y.__proto__.__proto__);
+
+/*
 Output
 {constructor: ƒ, __defineGetter__: ƒ, __defineSetter__: ƒ, …}
-This chain is now referring to Object.prototype. We can test the internal [[Prototype]] against the prototype property of the constructor function to see that they are referring to the same thing.
+This chain is now referring to Object.prototype. We can test the internal [[Prototype]] against 
+the prototype property of the constructor function to see that they are referring to the same thing.*/
 
 y.__proto__ === Array.prototype;            // true
 y.__proto__.__proto__ === Object.prototype; // true
-We can also use the isPrototypeOf() method to accomplish this.
+
+/*
+We can also use the isPrototypeOf() method to accomplish this.*/
 
 Array.prototype.isPrototypeOf(y);      // true
 Object.prototype.isPrototypeOf(Array); // true
-We can use the instanceof operator to test whether the prototype property of a constructor appears anywhere within an object’s prototype chain.
+
+/*
+We can use the instanceof operator to test whether the prototype property of a constructor appears 
+anywhere within an object’s prototype chain.*/
 
 y instanceof Array; // true
-To summarize, all JavaScript objects have a hidden, internal [[Prototype]] property (which may be exposed through __proto__ in some browsers). Objects can be extended and will inherit the properties and methods on [[Prototype]] of their constructor.
 
-These prototypes can be chained, and each additional object will inherit everything throughout the chain. The chain ends with the Object.prototype.
+/*
+To summarize, all JavaScript objects have a hidden, internal [[Prototype]] property (which may be exposed 
+through __proto__ in some browsers). Objects can be extended and will inherit the properties and methods 
+on [[Prototype]] of their constructor. These prototypes can be chained, and each additional object will 
+inherit everything throughout the chain. The chain ends with the Object.prototype.
 
 Constructor Functions
-Constructor functions are functions that are used to construct new objects. The new operator is used to create new instances based off a constructor function. We have seen some built-in JavaScript constructors, such as new Array() and new Date(), but we can also create our own custom templates from which to build new objects.
+---------------------
+Constructor functions are functions that are used to construct new objects. The new operator is used 
+to create new instances based off a constructor function. We have seen some built-in JavaScript 
+constructors, such as new Array() and new Date(), but we can also create our own custom templates 
+from which to build new objects.
 
-As an example, let’s say we are creating a very simple, text-based role-playing game. A user can select a character and then choose what character class they will have, such as warrior, healer, thief, and so on.
+As an example, let’s say we are creating a very simple, text-based role-playing game. A user can 
+select a character and then choose what character class they will have, such as warrior, healer, 
+thief, and so on.
 
-Since each character will share many characteristics, such as having a name, a level, and hit points, it makes sense to create a constructor as a template. However, since each character class may have vastly different abilities, we want to make sure each character only has access to their own abilities. Let’s take a look at how we can accomplish this with prototype inheritance and constructors.
+Since each character will share many characteristics, such as having a name, a level, and hit points, 
+it makes sense to create a constructor as a template. However, since each character class may have 
+vastly different abilities, we want to make sure each character only has access to their own abilities. 
+Let’s take a look at how we can accomplish this with prototype inheritance and constructors.
 
-To begin, a constructor function is just a regular function. It becomes a constructor when it is called on by an instance with the new keyword. In JavaScript, we capitalize the first letter of a constructor function by convention.
+To begin, a constructor function is just a regular function. It becomes a constructor when it is 
+called on by an instance with the new keyword. In JavaScript, we capitalize the first letter of a 
+constructor function by convention.*/
 
-characterSelect.js
 // Initialize a constructor function for a new Hero
 function Hero(name, level) {
   this.name = name;
   this.level = level;
 }
-We have created a constructor function called Hero with two parameters: name and level. Since every character will have a name and a level, it makes sense for each new character to have these properties. The this keyword will refer to the new instance that is created, so setting this.name to the name parameter ensures the new object will have a name property set.
 
-Now we can create a new instance with new.
+/*
+We have created a constructor function called Hero with two parameters: name and level. Since 
+every character will have a name and a level, it makes sense for each new character to have these 
+properties. The this keyword will refer to the new instance that is created, so setting this.name
+ to the name parameter ensures the new object will have a name property set.
+
+Now we can create a new instance with new.*/
 
 let hero1 = new Hero('Bjorn', 1);
+console.log(hero1);
+
+/*
 If we console out hero1, we will see a new object has been created with the new properties set as expected.
 
 Output
 Hero {name: "Bjorn", level: 1}
-Now if we get the [[Prototype]] of hero1, we will be able to see the constructor as Hero(). (Remember, this has the same input as hero1.__proto__, but is the proper method to use.)
+Now if we get the [[Prototype]] of hero1, we will be able to see the constructor as Hero(). 
+(Remember, this has the same input as hero1.__proto__, but is the proper method to use.)*/
 
 Object.getPrototypeOf(hero1);
+
+/*
 Output
 constructor: ƒ Hero(name, level)
-You may notice that we’ve only defined properties and not methods in the constructor. It is a common practice in JavaScript to define methods on the prototype for increased efficiency and code readability.
+You may notice that we’ve only defined properties and not methods in the constructor. It is a 
+common practice in JavaScript to define methods on the prototype for increased efficiency and code 
+readability.
 
-We can add a method to Hero using prototype. We’ll create a greet() method.
+We can add a method to Hero using prototype. We’ll create a greet() method.*/
 
-characterSelect.js
-...
-// Add greet method to the Hero prototype
 Hero.prototype.greet = function () {
   return `${this.name} says hello.`;
 }
-Since greet() is in the prototype of Hero, and hero1 is an instance of Hero, the method is available to hero1.
+
+/*
+Since greet() is in the prototype of Hero, and hero1 is an instance of Hero, the method is available to hero1.*/
 
 hero1.greet();
+
+/*
 Output
 "Bjorn says hello."
 If you inspect the [[Prototype]] of Hero, you will see greet() as an available option now.
 
-This is good, but now we want to create character classes for the heroes to use. It wouldn’t make sense to put all the abilities for every class into the Hero constructor, because different classes will have different abilities. We want to create new constructor functions, but we also want them to be connected to the original Hero.
+This is good, but now we want to create character classes for the heroes to use. It wouldn’t make 
+sense to put all the abilities for every class into the Hero constructor, because different classes will 
+have different abilities. We want to create new constructor functions, but we also want them to be connected 
+to the original Hero.
 
-We can use the call() method to copy over properties from one constructor into another constructor. Let’s create a Warrior and a Healer constructor.
+We can use the call() method to copy over properties from one constructor into another constructor. Let’s 
+create a Warrior and a Healer constructor.*/
 
-characterSelect.js
-...
+
 // Initialize Warrior constructor
 function Warrior(name, level, weapon) {
   // Chain constructor with call
@@ -180,10 +226,11 @@ function Healer(name, level, spell) {
 
   this.spell = spell;
 }
-Both new constructors now have the properties of Hero and a few unqiue ones. We’ll add the attack() method to Warrior, and the heal() method to Healer.
 
-characterSelect.js
-...
+/*
+Both new constructors now have the properties of Hero and a few unqiue ones. We’ll add the attack() 
+method to Warrior, and the heal() method to Healer.*/
+
 Warrior.prototype.attack = function () {
   return `${this.name} attacks with the ${this.weapon}.`;
 }
@@ -201,7 +248,7 @@ hero1 is now recognized as a Warrior with the new properties.
 Output
 Warrior {name: "Bjorn", level: 1, weapon: "axe"}
 We can use the new methods we set on the Warrior prototype.
-
+fff
 hero1.attack();
 Console
 "Bjorn attacks with the axe."
