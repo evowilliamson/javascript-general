@@ -238,36 +238,48 @@ Warrior.prototype.attack = function () {
 Healer.prototype.heal = function () {
   return `${this.name} casts ${this.spell}.`;
 }
-At this point, we’ll create our characters with the two new character classes available.
 
-characterSelect.js
-const hero1 = new Warrior('Bjorn', 1, 'axe');
-const hero2 = new Healer('Kanin', 1, 'cure');
+/*
+At this point, we’ll create our characters with the two new character classes available.*/
+
+hero1 = new Warrior('Bjorn', 1, 'axe');
+hero2 = new Healer('Kanin', 1, 'cure');
+
+
+/*
 hero1 is now recognized as a Warrior with the new properties.
 
 Output
 Warrior {name: "Bjorn", level: 1, weapon: "axe"}
-We can use the new methods we set on the Warrior prototype.
-fff
-hero1.attack();
-Console
-"Bjorn attacks with the axe."
-But what happens if we try to use methods further down the prototype chain?
+We can use the new methods we set on the Warrior prototype.*/
 
-hero1.greet();
+hero1.attack();
+
+/*
+Output
+"Bjorn attacks with the axe."
+
+But what happens if we try to use methods further down the prototype chain?*/
+
+//hero1.greet();
+
+/*
 Output
 Uncaught TypeError: hero1.greet is not a function
-Prototype properties and methods are not automatically linked when you use call() to chain constructors. We will use Object.create() to link the prototypes, making sure to put it before any additional methods are created and added to the prototype.
+Prototype properties and methods are not automatically linked when you use call() to chain constructors. 
+We will use Object.create() to link the prototypes, making sure to put it before any additional methods 
+are created and added to the prototype.*/
 
-characterSelect.js
-...
+
 Warrior.prototype = Object.create(Hero.prototype);
 Healer.prototype = Object.create(Hero.prototype);
 
-// All other prototype methods added below
-...
-Now we can successfully use prototype methods from Hero on an instance of a Warrior or Healer.
+/*
+Now we can successfully use prototype methods from Hero on an instance of a Warrior or Healer.*/
 
+hero1 = new Warrior('Bjorn', 1, 'axe');
 hero1.greet();
+
+/*
 Output
-"Bjorn says hello."
+"Bjorn says hello."*/
